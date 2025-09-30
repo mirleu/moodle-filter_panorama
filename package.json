@@ -1,15 +1,15 @@
 {
-  "name": "filter_panorama",
-  "version": "1.0.0",
-  "private": true,
-  "description": "",
-  "scripts": {
-    "build": "minify amd/src/panorama.js --out-file amd/build/panorama.min.js --mangle.keepFnName --mangle.keepClassName"
-  },
-  "author": "Darren Mei @ YuJa",
-  "license": "ISC",
-  "devDependencies": {
-    "babel-minify": "^0.5.1"
-  },
-  "dependencies": {}
+    "name": "filter_panorama",
+    "version": "1.0.0",
+    "private": true,
+    "description": "",
+    "scripts": {
+        "build": "minify amd/src/panorama.js --out-file amd/build/panorama.min.js --mangle.keepFnName --mangle.keepClassName",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "Tymoore Jamal @ YuJa",
+    "license": "ISC",
+    "devDependencies": {
+        "babel-minify": "^0.5.1"
+    }
 }

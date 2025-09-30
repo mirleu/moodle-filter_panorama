@@ -1,1 +1,1 @@
-npm i & npm run build & rmdir /s/q node_modules & del package-lock.json
+npm ci & npm run build & rmdir /s/q node_modules

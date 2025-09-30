@@ -23,3 +23,4 @@
 
 
 $string['filtername'] = 'Panorama for Moodle';
+$string['privacy:metadata'] = 'The Panorama For Moodle plugin does not collect or store any personal user data.';
