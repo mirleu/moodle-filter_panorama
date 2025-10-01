@@ -25,133 +25,130 @@
 defined('MOODLE_INTERNAL') || die();
 define('AES_METHOD', 'aes-256-cbc');
 
-class filter_panorama extends moodle_text_filter
-{
-    public function __construct($context, array $localconfig)
-    {
+class filter_panorama extends moodle_text_filter {
+
+    public function __construct($context, array $localconfig) {
         parent::__construct($context, $localconfig);
     }
 
-    public function setup($page, $context)
-    {
+    public function setup($page, $context) {
         try{
             global $USER, $COURSE, $PAGE, $DB;
-            static $js_initialized = false;
+            static $jsinitialized = false;
 
-            if ($js_initialized) {
+            if ($jsinitialized) {
                 return;
             }
 
             $config = get_config('panorama');
-            $courseContext = context_course::instance($COURSE->id);
+            $coursecontext = context_course::instance($COURSE->id);
             $key = $config->key1;
             $role = '';
-            $rolesLTIFormat = '';
-            $roles = get_user_roles($courseContext, $USER->id);
+            $rolesltiformat = '';
+            $roles = get_user_roles($coursecontext, $USER->id);
 
-            $ltiRoleUris = [];
+            $ltiroleuris = [];
 
-            foreach ($roles as $ltiRole) {
-                $shortname = $DB->get_field('role', 'shortname', ['id' => $ltiRole->roleid]);
-                $ltiUri = $this->map_moodle_role_to_lti_uri($shortname);
-                if ($ltiUri && !in_array($ltiUri, $ltiRoleUris)) {
-                    $ltiRoleUris[] = $ltiUri;
+            foreach ($roles as $ltirole) {
+                $shortname = $DB->get_field('role', 'shortname', ['id' => $ltirole->roleid]);
+                $ltiuri = $this->map_moodle_role_to_lti_uri($shortname);
+                if ($ltiuri && !in_array($ltiuri, $ltiroleuris)) {
+                    $ltiroleuris[] = $ltiuri;
                 }
             }
 
-            $rolesLTIFormat = implode(',', $ltiRoleUris);
-            
+            $rolesltiformat = implode(',', $ltiroleuris);
+
             if(is_siteadmin()){
                 $role = 'admin';
-                if (!is_null($rolesLTIFormat)) {
-                    $rolesLTIFormat = "$rolesLTIFormat,http://purl.imsglobal.org/vocab/lis/v2/institution/person#Administrator";
+                if (!is_null($rolesltiformat)) {
+                    $rolesltiformat = "$rolesltiformat,http://purl.imsglobal.org/vocab/lis/v2/institution/person#Administrator";
                 }
-                
-            } elseif (has_capability('moodle/course:managefiles', $courseContext, $USER->id)) {
+
+            } else if (has_capability('moodle/course:managefiles', $coursecontext, $USER->id)) {
                 $role = 'instructor';
             } else {
                 $role = 'student';
             }
 
-            $serverUrl = 'UNKNOWN';
-            $cdnUrl = 'UNKNOWN';
+            $serverurl = 'UNKNOWN';
+            $cdnurl = 'UNKNOWN';
             switch ($config->environment) {
                 case "Staging":
-                    $serverUrl = "https://staging-panorama-api.yuja.com";
-                    $cdnUrl = "https://staging-cdn-panorama.yuja.com";
+                    $serverurl = "https://staging-panorama-api.yuja.com";
+                    $cdnurl = "https://staging-cdn-panorama.yuja.com";
                     break;
                 case "Production US":
-                    $serverUrl = "https://panorama-api.yuja.com";
-                    $cdnUrl = "https://cdn-panorama.yuja.com";
+                    $serverurl = "https://panorama-api.yuja.com";
+                    $cdnurl = "https://cdn-panorama.yuja.com";
                     break;
                 case "Production CA":
-                    $serverUrl = "https://panorama-api-cz.yuja.com";
-                    $cdnUrl = "https://cdn-panorama.yuja.com";
+                    $serverurl = "https://panorama-api-cz.yuja.com";
+                    $cdnurl = "https://cdn-panorama.yuja.com";
                     break;
                 case "Production EU":
-                    $serverUrl = "https://panorama-api-ez.yuja.com";
-                    $cdnUrl = "https://cdn-panorama.yuja.com";
+                    $serverurl = "https://panorama-api-ez.yuja.com";
+                    $cdnurl = "https://cdn-panorama.yuja.com";
                     break;
                 case "Production AZ":
-                    $serverUrl = "https://panorama-api-az.yuja.com";
-                    $cdnUrl = "https://cdn-panorama.yuja.com";
+                    $serverurl = "https://panorama-api-az.yuja.com";
+                    $cdnurl = "https://cdn-panorama.yuja.com";
                     break;
             }
 
-            $panorama_moodle_user_hint = '';
+            $panoramamoodleuserhint = '';
 
             if (!is_null($USER)){
 
-                $userEmail = '';
-                $userFirstName = '';
-                $userLastName = '';
+                $useremail = '';
+                $userfirstname = '';
+                $userlastname = '';
 
                 if (isset($USER->email)){
-                    $userEmail = $USER->email;
+                    $useremail = $USER->email;
                 }
 
                 if (isset($USER->firstname)){
-                    $userFirstName = $USER->firstname;
+                    $userfirstname = $USER->firstname;
                 }
 
                 if (isset($USER->lastname)){
-                    $userLastName = $USER->lastname;
+                    $userlastname = $USER->lastname;
                 }
 
-                $user_data = array(
+                $userdata = [
                     'role' => $role,
                     'userId' => $USER->id,
-                    'email' => $userEmail,
-                    'firstName' => $userFirstName,
-                    'lastName' => $userLastName,
-                    'ltiRoles' => $rolesLTIFormat,
-                );
-                
-                $json_user_data = json_encode($user_data);
-        
-                $user_key = $this->generate_key($config->ltikey, $config->consumerkey);
-        
-                $panorama_moodle_user_hint = $this->encrypt($json_user_data, $user_key);    
+                    'email' => $useremail,
+                    'firstName' => $userfirstname,
+                    'lastName' => $userlastname,
+                    'ltiRoles' => $rolesltiformat,
+                ];
+
+                $jsonuserdata = json_encode($userdata);
+
+                $userkey = $this->generate_key($config->ltikey, $config->consumerkey);
+
+                $panoramamoodleuserhint = $this->encrypt($jsonuserdata, $userkey);
             }
 
-            $courseContextFilterState = $this->getContextFilterState($courseContext);
-            if($courseContextFilterState == -1){
-                $js_initialized = false;
+            $coursecontextfilterstate = $this->getContextFilterState($coursecontext);
+            if($coursecontextfilterstate == -1){
+                $jsinitialized = false;
                 return;
             }
             else {
-                $PAGE->requires->js_call_amd('filter_panorama/panorama', 'init', [$panorama_moodle_user_hint, $serverUrl, $cdnUrl, $key, $COURSE->id, $config->visualizerversion, $config->visualizerintegrity,]);
-                $js_initialized = true;
+                $PAGE->requires->js_call_amd('filter_panorama/panorama', 'init', [$panoramamoodleuserhint, $serverurl, $cdnurl, $key, $COURSE->id, $config->visualizerversion, $config->visualizerintegrity]);
+                $jsinitialized = true;
             }
-            
+
         }
         catch(Exception $e){
             echo $e->getMessage();
         }
     }
 
-    public function filter($text, array $options = [])
-    {
+    public function filter($text, array $options = []) {
         return $text;
     }
 
@@ -174,17 +171,17 @@ class filter_panorama extends moodle_text_filter
         }
     }
 
-    public function encrypt($user_data, $key){
-        $iv_size = openssl_cipher_iv_length(AES_METHOD);
-        $iv = openssl_random_pseudo_bytes($iv_size);
-        $ciphertext = openssl_encrypt($user_data, AES_METHOD, $key, OPENSSL_RAW_DATA, $iv);
-        $ciphertext_hex = bin2hex($ciphertext);
-        $iv_hex = bin2hex($iv);
-        return "$iv_hex:$ciphertext_hex";
+    public function encrypt($userdata, $key) {
+        $ivsize = openssl_cipher_iv_length(AES_METHOD);
+        $iv = openssl_random_pseudo_bytes($ivsize);
+        $ciphertext = openssl_encrypt($userdata, AES_METHOD, $key, OPENSSL_RAW_DATA, $iv);
+        $ciphertexthex = bin2hex($ciphertext);
+        $ivhex = bin2hex($iv);
+        return "$ivhex:$ciphertexthex";
     }
 
-    public function generate_key($ltikey, $consumerkey){
-        $user_key = '';
+    public function generate_key($ltikey, $consumerkey) {
+        $userkey = '';
 
         $i = 0;
 
@@ -192,28 +189,27 @@ class filter_panorama extends moodle_text_filter
             if($i == 32){
                 break;
             }
-            $user_key = $user_key.$ltikey[$i];
+            $userkey = $userkey.$ltikey[$i];
             $i++;
         }
 
-        for($index = 0; $index < (32-strlen($ltikey)); $index++){
+        for($index = 0; $index < (32 - strlen($ltikey)); $index++){
             if($index >= strlen($consumerkey)){
-                $user_key = $user_key.'0';
+                $userkey = $userkey.'0';
             }else{
-                $user_key = $user_key.$consumerkey[$index];
+                $userkey = $userkey.$consumerkey[$index];
             }
-           
+
         }
-        return $user_key;
+        return $userkey;
     }
 
-    public function getContextFilterState($courseContext)
-    {
-        $panoramaFilterState = 1;
-        $contextfilters = filter_get_available_in_context($courseContext);
+    public function getcontextfilterstate($coursecontext) {
+        $panoramafilterstate = 1;
+        $contextfilters = filter_get_available_in_context($coursecontext);
         if ($contextfilters && $contextfilters['panorama']) {
-            $panoramaFilterState = $contextfilters['panorama']->localstate == 0 ? $contextfilters['panorama']->inheritedstate : $contextfilters['panorama']->localstate;
+            $panoramafilterstate = $contextfilters['panorama']->localstate == 0 ? $contextfilters['panorama']->inheritedstate : $contextfilters['panorama']->localstate;
         }
-        return $panoramaFilterState;
+        return $panoramafilterstate;
     }
 }
