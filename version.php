@@ -24,9 +24,9 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->release   = 'v1.8.0';
-$plugin->version   = 2025061000;
+$plugin->version   = 2025110400;
 $plugin->requires  = 2017051500;
 $plugin->component = 'filter_panorama';
 $plugin->dependencies = [
-    'local_panorama' => 2025061000,
+    'local_panorama' => 2025110400,
 ];
