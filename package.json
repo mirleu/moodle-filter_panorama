@@ -8,7 +8,7 @@
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "author": "Tymoore Jamal @ YuJa",
-    "license": "ISC",
+    "license": "UNLICENSED",
     "devDependencies": {
         "babel-minify": "^0.5.1"
     }

@@ -6,8 +6,6 @@ define(function () {
             cdnUrl,
             identifierKey,
             courseId,
-            visualizerVersion,
-            integrityHash,
         ) {
             if (serverUrl && identifierKey && identifierKey.length > 0) {
                 if (!window.panoramaFetched) {
@@ -17,33 +15,19 @@ define(function () {
                     window.panoramaIdentifierKey = identifierKey;
                     window.PANORAMA_CDN_URL = cdnUrl;
                     window.courseId = courseId;
+
+                    visualizerVersion = '1762298392807';
+                    integrityHash =
+                        'sha512-GxjWm5iZ6QVwcGhtjtGSRiyLTcf0EbNCjuyxdBPmlFDV7iE8V9Oz8iVD7YcWGkJwABOfaJwhPvy+Nn+k3Cwx0w==';
+
                     window.panoramaVisualizerVersion = visualizerVersion;
                     window.panoramaIntegrityHash = integrityHash;
 
-                    function loadScript(url, integrity) {
-                        const script = document.createElement('script');
-                        script.src = url;
-                        if (integrity) {
-                            script.integrity = integrity;
-                            script.crossOrigin = 'anonymous';
-                        }
-                        document.head.appendChild(script);
-                    }
-
-                    async function loadLatestMoodleVisualizer() {
-                        const response = await fetch(
-                            `${serverUrl}/panorama-visualizer/moodle`,
-                        );
-                        const scriptUrl = await response.text();
-                        loadScript(scriptUrl);
-                    }
-
-                    async function loadVersionedMoodleVisualizer() {
-                        loadScript(
-                            `${cdnUrl}/resources/build/moodle-visualizer.${visualizerVersion}.js`,
-                            integrityHash,
-                        );
-                    }
+                    const script = document.createElement('script');
+                    script.src = `${cdnUrl}/resources/build/moodle-visualizer.${visualizerVersion}.js`;
+                    script.integrity = integrityHash;
+                    script.crossOrigin = 'anonymous';
+                    document.head.appendChild(script);
 
                     function attemptInit() {
                         if (window.panoramaInit) {
@@ -54,12 +38,6 @@ define(function () {
                                 attemptInit();
                             }, 50);
                         }
-                    }
-
-                    if (visualizerVersion && visualizerVersion !== '') {
-                        await loadVersionedMoodleVisualizer();
-                    } else {
-                        await loadLatestMoodleVisualizer();
                     }
 
                     attemptInit();
