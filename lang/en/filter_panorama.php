@@ -26,15 +26,15 @@ $string['filtername'] = 'Panorama for Moodle';
 $string['privacy:metadata'] = 'The Panorama For Moodle plugin does not collect or store any personal user data.';
 
 // Settings strings
-$string['consumerkey'] = 'Consumer Key';
-$string['consumerkey_desc'] = 'Enter your consumer key';
 $string['environment'] = 'Environment';
 $string['environment_desc'] = 'Select the Panorama environment to connect to';
 $string['key1'] = 'Panorama Key';
 $string['key1_desc'] = 'Enter your Panorama authentication key';
 $string['ltikey'] = 'LTI Key';
 $string['ltikey_desc'] = 'Enter your LTI key';
-$string['visualizerintegrity'] = 'Visualizer Integrity Hash';
-$string['visualizerintegrity_desc'] = 'Enter the integrity hash for the visualizer';
+$string['consumerkey'] = 'Consumer Key';
+$string['consumerkey_desc'] = 'Enter your consumer key';
 $string['visualizerversion'] = 'Visualizer Version';
 $string['visualizerversion_desc'] = 'Specify the visualizer version (leave empty for latest)';
+$string['visualizerintegrity'] = 'Visualizer Integrity Hash';
+$string['visualizerintegrity_desc'] = 'Enter the integrity hash for the visualizer';

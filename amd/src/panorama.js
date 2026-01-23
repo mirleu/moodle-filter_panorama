@@ -16,9 +16,9 @@ define(function () {
                     window.PANORAMA_CDN_URL = cdnUrl;
                     window.courseId = courseId;
 
-                    visualizerVersion = '1762298392807';
+                    visualizerVersion = '1768866302050';
                     integrityHash =
-                        'sha512-GxjWm5iZ6QVwcGhtjtGSRiyLTcf0EbNCjuyxdBPmlFDV7iE8V9Oz8iVD7YcWGkJwABOfaJwhPvy+Nn+k3Cwx0w==';
+                        'sha512-rmst2oESS/dJKqHkbEzLwZLjk7NH+dCFaIt4O8b4RkzdyyvZUQ8ftYYun2YJhIwN8aE5A8KNtpFnhJ2TAZueqA==';
 
                     window.panoramaVisualizerVersion = visualizerVersion;
                     window.panoramaIntegrityHash = integrityHash;

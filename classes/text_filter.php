@@ -25,12 +25,15 @@ namespace filter_panorama;
 defined('MOODLE_INTERNAL') || die();
 define('AES_METHOD', 'aes-256-cbc');
 
-class text_filter extends \core_filters\text_filter {
-    public function __construct($context, array $localconfig) {
+class text_filter extends \core_filters\text_filter
+{
+    public function __construct($context, array $localconfig)
+    {
         parent::__construct($context, $localconfig);
     }
 
-    public function setup($page, $context) {
+    public function setup($page, $context)
+    {
         try{
             global $USER, $COURSE, $PAGE, $DB;
             static $js_initialized = false;
@@ -58,7 +61,7 @@ class text_filter extends \core_filters\text_filter {
 
             $rolesLTIFormat = implode(',', $ltiRoleUris);
             
-            if(is_siteadmin()) {
+            if(is_siteadmin()){
                 $role = 'admin';
                 if (!is_null($rolesLTIFormat)) {
                     $rolesLTIFormat = "$rolesLTIFormat,http://purl.imsglobal.org/vocab/lis/v2/institution/person#Administrator";
@@ -97,21 +100,21 @@ class text_filter extends \core_filters\text_filter {
 
             $panorama_moodle_user_hint = '';
 
-            if (!is_null($USER)) {
+            if (!is_null($USER)){
 
                 $userEmail = '';
                 $userFirstName = '';
                 $userLastName = '';
 
-                if (isset($USER->email)) {
+                if (isset($USER->email)){
                     $userEmail = $USER->email;
                 }
 
-                if (isset($USER->firstname)) {
+                if (isset($USER->firstname)){
                     $userFirstName = $USER->firstname;
                 }
 
-                if (isset($USER->lastname)) {
+                if (isset($USER->lastname)){
                     $userLastName = $USER->lastname;
                 }
 
@@ -132,7 +135,7 @@ class text_filter extends \core_filters\text_filter {
             }
 
             $courseContextFilterState = $this->getContextFilterState($courseContext);
-            if($courseContextFilterState == -1) {
+            if($courseContextFilterState == -1){
                 $js_initialized = false;
                 return;
             }
@@ -142,7 +145,7 @@ class text_filter extends \core_filters\text_filter {
             }
             
         }
-        catch(\Exception $e) {
+        catch(\Exception $e){
             echo $e->getMessage();
         }
     }
@@ -171,7 +174,7 @@ class text_filter extends \core_filters\text_filter {
         }
     }
 
-    public function encrypt($user_data, $key) {
+    public function encrypt($user_data, $key){
         $iv_size = openssl_cipher_iv_length(AES_METHOD);
         $iv = openssl_random_pseudo_bytes($iv_size);
         $ciphertext = openssl_encrypt($user_data, AES_METHOD, $key, OPENSSL_RAW_DATA, $iv);
@@ -180,23 +183,23 @@ class text_filter extends \core_filters\text_filter {
         return "$iv_hex:$ciphertext_hex";
     }
 
-    public function generate_key($ltikey, $consumerkey) {
+    public function generate_key($ltikey, $consumerkey){
         $user_key = '';
 
         $i = 0;
 
-        while($i < strlen($ltikey)) {
-            if($i == 32) {
+        while($i < strlen($ltikey)){
+            if($i == 32){
                 break;
             }
             $user_key = $user_key.$ltikey[$i];
             $i++;
         }
 
-        for($index = 0; $index < (32-strlen($ltikey)); $index++) {
+        for($index = 0; $index < (32-strlen($ltikey)); $index++){
             if($index >= strlen($consumerkey)){
                 $user_key = $user_key.'0';
-            } else {
+            }else{
                 $user_key = $user_key.$consumerkey[$index];
             }
            
