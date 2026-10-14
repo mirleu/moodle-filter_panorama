@@ -23,10 +23,16 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->release   = 'v1.8.0';
-$plugin->version   = 2026011900;
-$plugin->requires  = 2017051500;
+$plugin->release   = 'v1.9.0';
+$plugin->version   = 2026093002;
+// Moodle 3.9. This is the stricter of the two floors merged into this plugin:
+// the filter declared 3.3, but local_replacementapipanorama declared 3.9, and a
+// site needed both for Panorama to function -- so 3.9 was already the effective
+// minimum. Supports 3.9 through 5.x via the dual filter entry points
+// (filter.php for < 4.5, classes/text_filter.php for 4.5+).
+$plugin->requires  = 2020061500;
 $plugin->component = 'filter_panorama';
-$plugin->dependencies = [
-    'local_panorama' => 2026011900,
-];
+$plugin->maturity  = MATURITY_STABLE;
+// No dependencies: local_panorama and local_replacementapipanorama are consolidated
+// into this plugin as of v1.9.0. Both must be uninstalled BEFORE installing this
+// version -- see moodle-plugins/README.md for the required order.

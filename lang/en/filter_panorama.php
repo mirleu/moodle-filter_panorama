@@ -21,20 +21,37 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+defined('MOODLE_INTERNAL') || die();
 
 $string['filtername'] = 'Panorama for Moodle';
+$string['pluginname'] = 'Panorama for Moodle';
 $string['privacy:metadata'] = 'The Panorama For Moodle plugin does not collect or store any personal user data.';
 
-// Settings strings
-$string['environment'] = 'Environment';
-$string['environment_desc'] = 'Select the Panorama environment to connect to';
-$string['key1'] = 'Panorama Key';
-$string['key1_desc'] = 'Enter your Panorama authentication key';
+// Admin tree.
+$string['panorama'] = 'Panorama';
+$string['settings'] = 'Panorama for Moodle Settings';
+
+// Settings strings. The *desc names are the ones settings.php references.
+$string['environment'] = 'Panorama Environment';
+$string['environmentdesc'] = '';
+$string['key1'] = 'Primary Identify key';
+$string['key1desc'] = '';
+$string['key2'] = 'Secondary Identify Key';
+$string['key2desc'] = '';
+$string['consumerkey'] = 'LTI Consumer Key';
+$string['consumerkeydesc'] = '';
 $string['ltikey'] = 'LTI Key';
-$string['ltikey_desc'] = 'Enter your LTI key';
-$string['consumerkey'] = 'Consumer Key';
-$string['consumerkey_desc'] = 'Enter your consumer key';
-$string['visualizerversion'] = 'Visualizer Version';
-$string['visualizerversion_desc'] = 'Specify the visualizer version (leave empty for latest)';
-$string['visualizerintegrity'] = 'Visualizer Integrity Hash';
-$string['visualizerintegrity_desc'] = 'Enter the integrity hash for the visualizer';
+$string['ltikeydesc'] = '';
+$string['visualizerversion'] = 'Visualizer Version (Optional)';
+$string['visualizerversiondesc'] = '';
+$string['visualizerintegrity'] = 'Integrity Hash of Selected Version';
+$string['visualizerintegritydesc'] = '';
+
+// Web service error messages. These are referenced by classes/external/* and were
+// previously missing from every language file, so they rendered as [[stringname]].
+$string['invalidfilepath'] = 'The supplied file path is not valid.';
+$string['invalidresourceid'] = 'The supplied resource ID does not match a resource in this Moodle site.';
+$string['filenotfound'] = 'The file to be replaced could not be found in Moodle.';
+$string['failedtoretrievecontent'] = 'The replacement content could not be retrieved from Panorama.';
+$string['failedtocreatefile'] = 'The replacement file could not be created in Moodle.';
+$string['failedtoupdate'] = 'The Moodle resource could not be updated with the replacement content.';
